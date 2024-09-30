@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +12,17 @@
             padding: 0;
             margin: 0;
         }
+
         .container {
             width: 100%;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
+            gap: 1em;
         }
+
         textarea {
             background-color: #070707;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -25,12 +30,50 @@
             font-size: x-large;
             padding: 1.5em 2.5em;
         }
+
+        button {
+            background-color: #070707;
+            color: #b1b1b1;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: x-large;
+            padding: .5em .8em;
+            border: 1px solid #b1b1b1;
+            cursor: pointer;
+            transition: all .15s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        button:hover {
+            background-color: #559445;
+            color: white;
+            border: 1px solid #559445;
+        }
     </style>
+    <script>
+        const styleTagContent = '.f4nqqg9 { filter: none !important }';
+        const styleTagElement = document.createElement('style');
+        styleTagElement.innerHTML = styleTagContent;
+        styleTagElement.classList.add('premium-enabler');
+
+        function addStyleTag() {
+            const elements = document.querySelectorAll('.dnXmp');
+            for (const element of elements) {
+                if (element.shadowRoot === null) {
+                    continue;
+                }
+                if (element.shadowRoot.querySelector('.premium-enabler') !== null) {
+                    continue;
+                }
+                element.shadowRoot.appendChild(styleTagElement.cloneNode(true));
+            }
+        }
+    </script>
 </head>
+
 <body>
     <div class="container">
+        <button onclick="addStyleTag()">✨ Premium Enabler ✨</button>
         <textarea name="text" id="text" cols="80" rows="20" placeholder="Type here..."></textarea>
     </div>
 </body>
-<style>.f4nqqg9 { filter: none !important }</style>
+
 </html>
