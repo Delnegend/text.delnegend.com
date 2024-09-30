@@ -54,24 +54,50 @@
         styleTagElement.innerHTML = styleTagContent;
         styleTagElement.classList.add('premium-enabler');
 
-        function addStyleTag() {
-            const elements = document.querySelectorAll('.dnXmp');
-            for (const element of elements) {
-                if (element.shadowRoot === null) {
-                    continue;
-                }
-                if (element.shadowRoot.querySelector('.premium-enabler') !== null) {
-                    continue;
-                }
-                element.shadowRoot.appendChild(styleTagElement.cloneNode(true));
-            }
+        function waitForShadowRoot(node, timeout = 5000) {
+            return new Promise((resolve, reject) => {
+                const checkInterval = 50;
+                const intervalId = setInterval(() => {
+                    if (node.shadowRoot) {
+                        clearInterval(intervalId);
+                        resolve(node.shadowRoot);
+                    }
+                }, checkInterval);
+
+                setTimeout(() => {
+                    clearInterval(intervalId);
+                    reject('ShadowRoot not found within timeout period');
+                }, timeout);
+            });
         }
+
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type !== 'childList') {
+                    continue;
+                }
+                if (mutation.addedNodes.length <= 0) {
+                    continue;
+                }
+                for (const node of mutation.addedNodes) {
+                    if (!(node.nodeType === 1 && node.classList.contains('dnXmp'))) {
+                        continue;
+                    }
+                    waitForShadowRoot(node).then((shadowRoot) => {
+                        if (node.shadowRoot.querySelector('.premium-enabler') === null) {
+                            node.shadowRoot.appendChild(styleTagElement.cloneNode(true));
+                        }
+                    }).catch((e) => console.error(e));
+                }
+            }
+        });
+
+        observer.observe(document.querySelector("html"), { childList: true, subtree: true });
     </script>
 </head>
 
 <body>
     <div class="container">
-        <button onclick="addStyleTag()">✨ Premium Enabler ✨</button>
         <textarea name="text" id="text" cols="80" rows="20" placeholder="Type here..."></textarea>
     </div>
 </body>
